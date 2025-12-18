@@ -10,7 +10,8 @@ class Day8App extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Bài tập Day 8"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,21 +22,19 @@ class Day8App extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            
-            // Nút bấm vào bài 1: Login
+
             _buildMenuButton(
               context,
-              "1. FormBmi Screen",
-              Icons.login, // Đã đổi icon thành nút Login
-              Colors.blue,
+              "1. Tính chỉ số BMI",
+              Icons.monitor_weight, 
+              Colors.orange,     
               const FormBmi(),
             ),
             
-            // Nút bấm vào bài 2: Register
             _buildMenuButton(
               context,
-              "2. FormFeedback Screen",
-              Icons.person_add, // Đã đổi icon thành hình thêm người
+              "2. Gửi phản hồi (Feedback)",
+              Icons.rate_review, 
               Colors.green,
               const FormFeedback(),
             ),
@@ -45,18 +44,19 @@ class Day8App extends StatelessWidget {
     );
   }
 
-  // Hàm tạo nút bấm
   Widget _buildMenuButton(BuildContext context, String title, IconData icon, Color color, Widget page) {
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Bo góc xíu cho mềm mại
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.2),
-          child: Icon(icon, color: color),
+          backgroundColor: color.withOpacity(0.1), // Nền nhạt
+          child: Icon(icon, color: color),         // Icon đậm
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         onTap: () {
           Navigator.push(
             context,

@@ -12,19 +12,18 @@ class MyLogin extends StatefulWidget {
 
 class _MyLoginState extends State<MyLogin> {
   final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _passwordController = TextEditingController(); 
   
   final AuthService _authService = AuthService();
   bool _isLoading = false;
   bool _isObscure = true;
 
+  final Color _primaryColor = const Color(0xFF2E7D32);
+
   void _handleLogin() async {
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Vui lòng nhập đầy đủ thông tin"),
-          backgroundColor: Colors.orange,
-        ),
+        SnackBar(content: const Text("Vui lòng nhập đầy đủ thông tin"), backgroundColor: Colors.red),
       );
       return;
     }
@@ -48,232 +47,126 @@ class _MyLoginState extends State<MyLogin> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.error_outline, color: Colors.white),
-              SizedBox(width: 10),
-              Text("Sai tài khoản hoặc mật khẩu!"),
-            ],
-          ),
-          backgroundColor: Colors.red.shade600,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
+        const SnackBar(content: Text("Đăng nhập thất bại!"), backgroundColor: Colors.red),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Color(0xFF6C63FF);
-    final secondaryColor = Color(0xFF4CAF50);
-
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              primaryColor.withOpacity(0.1),
-              secondaryColor.withOpacity(0.05),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: _primaryColor,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text("Sign In", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: _primaryColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.eco, size: 40, color: _primaryColor),
+              ),
+              const SizedBox(height: 24),
+
+              const Text(
+                "Welcome Back",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "Please sign in to your account",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              
+              const SizedBox(height: 48),
+
+              // Form Username
+              _buildTextField(
+                controller: _usernameController,
+                label: "Username",
+                icon: Icons.person_outline,
+              ),
+              const SizedBox(height: 16),
+              
+              // Form Password
+              _buildTextField(
+                controller: _passwordController,
+                label: "Password",
+                icon: Icons.lock_outline,
+                isPassword: true,
+              ),
+
+              // Forgot Password
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text("Forgot Password?", style: TextStyle(color: _primaryColor, fontWeight: FontWeight.w600)),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Button Login
+              SizedBox(
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _handleLogin,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _primaryColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 2,
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                      : const Text("LOGIN", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                ),
+              ),
             ],
           ),
         ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Logo/Icon
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: primaryColor.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.person_outline_rounded,
-                      size: 64,
-                      color: primaryColor,
-                    ),
-                  ),
+      ),
+    );
+  }
 
-                  const SizedBox(height: 40),
-
-                  // Title
-                  Text(
-                    "Đăng Nhập",
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: primaryColor,
-                      letterSpacing: 1,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    "Chào mừng bạn quay trở lại",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  // Form card
-                  Container(
-                    padding: const EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        // Username field
-                        TextField(
-                          controller: _usernameController,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: InputDecoration(
-                            labelText: "Tên đăng nhập",
-                            prefixIcon: Icon(
-                              Icons.person_outline,
-                              color: primaryColor,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 18,
-                              horizontal: 20,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                color: primaryColor,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Password field
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: _isObscure,
-                          style: const TextStyle(fontSize: 16),
-                          decoration: InputDecoration(
-                            labelText: "Mật khẩu",
-                            prefixIcon: Icon(
-                              Icons.lock_outline,
-                              color: primaryColor,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isObscure
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.grey,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isObscure = !_isObscure;
-                                });
-                              },
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey[50],
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 18,
-                              horizontal: 20,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                color: primaryColor,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        // Login button
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _handleLogin,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: primaryColor,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              elevation: 5,
-                              shadowColor: primaryColor.withOpacity(0.4),
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 3,
-                                    ),
-                                  )
-                                : const Text(
-                                    "ĐĂNG NHẬP",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
-          ),
-        ),
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword ? _isObscure : false,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.grey[600]),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility, color: Colors.grey),
+                onPressed: () => setState(() => _isObscure = !_isObscure),
+              )
+            : null,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey[300]!)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey[300]!)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: _primaryColor, width: 2)),
+        filled: true,
+        fillColor: Colors.grey[50],
+        contentPadding: const EdgeInsets.symmetric(vertical: 18),
       ),
     );
   }

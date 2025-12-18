@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_portfolio/projects/day9/model/product.dart';
 import 'api.dart';
+import 'cart.dart';
+import 'cart_screen.dart';
 
 class MyProduct extends StatefulWidget {
   const MyProduct({super.key});
@@ -10,162 +12,246 @@ class MyProduct extends StatefulWidget {
 }
 
 class _MyProductState extends State<MyProduct> {
+  final TextEditingController _searchController = TextEditingController();
+  final CartStore _cartStore = CartStore(); 
+  
+  List<Product> allProducts = [];
+  List<Product> displayProducts = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _fetchData();
   }
 
-  List<Product> allProducts = [];
-  List<Product> displayProducts = [];
+  void _fetchData() async {
+    try {
+      var data = await test_api.getAllProduct();
+      setState(() {
+        allProducts = data;
+        displayProducts = data;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() { _isLoading = false; });
+    }
+  }
+
+  void _runFilter() {
+    FocusScope.of(context).unfocus();
+    String keyword = _searchController.text;
+    setState(() {
+      if (keyword.isEmpty) {
+        displayProducts = allProducts;
+      } else {
+        displayProducts = allProducts
+            .where((p) => p.title.toLowerCase().contains(keyword.toLowerCase()))
+            .toList();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5FA), 
+
       appBar: AppBar(
-        title: Center(child: Text('List Product', style: TextStyle(fontWeight: FontWeight.bold),)), 
-        backgroundColor: Colors.orange,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.green, 
+        elevation: 0,
+        titleSpacing: 0, 
+
+        leading: IconButton(
+          icon: const Icon(Icons.storefront, color: Colors.white, size: 28),
+          onPressed: () {
+            _searchController.clear();
+            _runFilter();
+          },
         ),
-      body: FutureBuilder(
-        future: test_api.getAllProduct(),
-        builder: (context, snap){
-          if(snap.connectionState == ConnectionState.done){
-          allProducts = snap.data!;
-          displayProducts = allProducts; // hiển thị mặc định
-          return buildBody();
-          }else{
-            return Center(child: CircularProgressIndicator());
-          }
-        }),
-    );
-  }
 
-  Widget buildBody() {
-    return Column(
-      children: [
-        buildSearchBar(),
-        Expanded(child: myListProduct(displayProducts)),
-      ],
-    );
-  }
-
-  Widget buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: TextField(
-        onChanged: (value) {
-          setState(() {
-            displayProducts = allProducts.where((p) =>
-                p.title.toLowerCase().contains(value.toLowerCase())
-            ).toList();
-          });
-        },
-        decoration: InputDecoration(
-          hintText: "Tìm kiếm sản phẩm...",
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+        title: Container(
+          height: 40,
+          margin: const EdgeInsets.only(right: 10), 
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
           ),
-        ),
-      ),
-    );
-  }
-
-
-  Widget myListProduct(List<Product> ls){
-    return GridView.builder(
-      padding: EdgeInsets.all(8),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 0.8
-      ),
-      itemCount: ls.length,
-      itemBuilder: (context, index){
-        return myProduct(ls[index]);
-      }
-    );
-  }
-
-  Widget myProduct(Product p){
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
-        color: Colors.white
-      ),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
-            ),
-            child: Image.network(
-              p.image,
-              height: 120,
-              width: double.infinity,
-              fit: BoxFit.contain,
+          child: TextField(
+            controller: _searchController,
+            textInputAction: TextInputAction.search,
+            onSubmitted: (_) => _runFilter(),
+            decoration: InputDecoration(
+              hintText: "Bạn tìm gì hôm nay?",
+              hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+              prefixIcon: const Icon(Icons.search, color: Colors.grey, size: 22),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? IconButton(
+                      icon: const Icon(Icons.close, size: 18, color: Colors.grey),
+                      onPressed: () {
+                         _searchController.clear();
+                         _runFilter();
+                      },
+                    )
+                  : null,
             ),
           ),
-          SizedBox(height: 4),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+        ),
+
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const CartScreen())
+                ).then((_) => setState((){}));
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
                 children: [
-                  Text(
-                    p.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    p.description,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 11, color: Colors.black87),
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "${p.price} \$",
-                        style: const TextStyle(
+                  const Icon(Icons.shopping_cart_outlined, size: 28, color: Colors.white),
+                  if (_cartStore.items.isNotEmpty)
+                    Positioned(
+                      top: -4,
+                      right: -4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                        decoration: BoxDecoration(
                           color: Colors.red,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.green, width: 1.5)
+                        ),
+                        child: Text(
+                          '${_cartStore.items.length}',
+                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, size: 14, color: Colors.orange),
-                      const SizedBox(width: 2),
-                      Text(
-                        '${p.rating.rate} | ',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "Đã bán: ${p.rating.count}",
-                        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-                      )
-                    ],
-                  ),
+                    )
                 ],
               ),
-            )
+            ),
+          )
+        ],
+      ),
+
+      body: Column(
+        children: [
+          Expanded(
+            child: _isLoading 
+            ? const Center(child: CircularProgressIndicator(color: Colors.green))
+            : displayProducts.isEmpty
+                ? const Center(child: Text("Không tìm thấy sản phẩm!"))
+                : GridView.builder(
+                    padding: const EdgeInsets.all(12),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.7, // Tỷ lệ thẻ
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemCount: displayProducts.length,
+                    itemBuilder: (context, index) {
+                      return _buildProductCard(displayProducts[index]);
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductCard(Product p) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Ảnh
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              ),
+              child: Image.network(p.image, fit: BoxFit.contain),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  p.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 13, height: 1.3),
+                ),
+                const SizedBox(height: 8),
+                
+                // Giá + Nút Mua
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "\$${p.price}",
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold, 
+                        fontSize: 16
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                         _cartStore.addToCart(p);
+                         setState(() {});
+                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                         ScaffoldMessenger.of(context).showSnackBar(
+                           SnackBar(
+                             content: Text("Đã thêm: ${p.title}"),
+                             duration: const Duration(seconds: 1),
+                             behavior: SnackBarBehavior.floating,
+                             backgroundColor: Colors.black87,
+                           )
+                         );
+                      },
+                      child: const Icon(Icons.add_circle, color: Colors.green, size: 28),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 4),
+                // Rating nhỏ
+                Row(
+                  children: [
+                    const Icon(Icons.star, size: 12, color: Colors.amber),
+                    Text(" ${p.rating.rate}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    const Spacer(),
+                    Text("Đã bán ${p.rating.count}", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  ],
+                )
+              ],
+            ),
           )
         ],
       ),
     );
   }
 }
-//JwT

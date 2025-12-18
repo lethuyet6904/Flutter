@@ -11,19 +11,19 @@ class Day6App extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Bài tập Day 6"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             const Text(
-              "Danh sch bài tập:",
+              "Danh sách bài tập:",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            
-            // Nút bấm vào bài 1: Đổi màu
+
             _buildMenuButton(
               context,
               "1. Change Color App",
@@ -31,8 +31,7 @@ class Day6App extends StatelessWidget {
               Colors.purple,
               const ChangeColorApp(),
             ),
-            
-            // Nút bấm vào bài 2: Đếm số
+
             _buildMenuButton(
               context,
               "2. Count App",
@@ -41,7 +40,6 @@ class Day6App extends StatelessWidget {
               const CountApp(),
             ),
 
-            // Nút bấm vào bài 3: Đồng hồ đếm ngược
             _buildMenuButton(
               context,
               "3. Countdown Timer",
@@ -55,7 +53,6 @@ class Day6App extends StatelessWidget {
     );
   }
 
-  // Hàm tạo nút bấm cho gọn code
   Widget _buildMenuButton(BuildContext context, String title, IconData icon, Color color, Widget page) {
     return Card(
       elevation: 4,

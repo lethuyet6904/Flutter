@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// --- IMPORT CÁC BÀI TẬP ---
+// Đảm bảo đường dẫn import đúng với cấu trúc thư mục của bạn
 import './projects/day1/main.dart';
 import './projects/day2/main.dart';
 import './projects/day3/main.dart';
@@ -14,16 +14,17 @@ import './projects/day9/main.dart';
 import './projects/day10/main.dart';
 import './projects/day11/main.dart';
 
-// --- MODEL DỮ LIỆU (Đã bỏ Icon) ---
 class ProjectDay {
   final String title;
   final String description;
   final Widget destinationPage;
+  final IconData icon;
 
   ProjectDay({
     required this.title,
     required this.description,
     required this.destinationPage,
+    required this.icon,
   });
 }
 
@@ -38,12 +39,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Lê Thanh Thuyết Portfolio',
+      title: 'Flutter Portfolio',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
         useMaterial3: true,
-        fontFamily: 'Roboto', 
+        fontFamily: 'Roboto',
       ),
       home: const PortfolioHomePage(),
     );
@@ -58,23 +59,22 @@ class PortfolioHomePage extends StatefulWidget {
 }
 
 class _PortfolioHomePageState extends State<PortfolioHomePage> {
-  // --- DANH SÁCH BÀI TẬP (Đã bỏ tham số icon) ---
   final List<ProjectDay> projects = [
-    ProjectDay(title: "Day 1: Hello World", description: "Làm quen giao diện & Cấu trúc", destinationPage: const Day1App()),
-    ProjectDay(title: "Day 2: Properties", description: "Các thuộc tính cơ bản Dart", destinationPage: const Day2App()),
-    ProjectDay(title: "Day 3: UI Layouts", description: "Row, Column, Stack", destinationPage: const Day3App()),
-    ProjectDay(title: "Day 4: State Management", description: "Quản lý trạng thái cơ bản", destinationPage: const Day4App()),
-    ProjectDay(title: "Day 5: User Inputs", description: "TextField & Form Handling", destinationPage: const Day5App()),
-    ProjectDay(title: "Day 6: Scroll View", description: "ListView & GridView", destinationPage: const Day6App()),
-    ProjectDay(title: "Day 7: Navigation", description: "Chuyển màn hình & Route", destinationPage: const Day7App()),
-    ProjectDay(title: "Day 8: Async Programming", description: "Future, Async, Await", destinationPage: const Day8App()),
-    ProjectDay(title: "Day 9: API Integration", description: "Kết nối REST API", destinationPage: const Day9App()),
-    ProjectDay(title: "Day 10: Advanced State", description: "Quản lý dữ liệu phức tạp", destinationPage: const Day10App()),
-    ProjectDay(title: "Day 11: Final Project", description: "Tổng hợp kiến thức", destinationPage: const Day11App()),
+    ProjectDay(title: "Bài 1: Làm quen với Flutter", description: "Khởi đầu với Flutter framework", destinationPage: const Day1App(), icon: Icons.flutter_dash),
+    ProjectDay(title: "Bài 2: Basic Layout & Styling", description: "Thiết kế giao diện cơ bản", destinationPage: const Day2App(), icon: Icons.dashboard_customize),
+    ProjectDay(title: "Bài 3: ListView & Custom Card", description: "Danh sách và thẻ tùy chỉnh", destinationPage: const Day3App(), icon: Icons.view_list),
+    ProjectDay(title: "Bài 4: GuideToLayout", description: "Hướng dẫn bố cục nâng cao", destinationPage: const Day4App(), icon: Icons.grid_view),
+    ProjectDay(title: "Bài 5: Hotel Booking App", description: "Ứng dụng đặt phòng khách sạn", destinationPage: const Day5App(), icon: Icons.hotel),
+    ProjectDay(title: "Bài 6: StatefulWidget", description: "Quản lý trạng thái widget", destinationPage: const Day6App(), icon: Icons.settings_applications),
+    ProjectDay(title: "Bài 7: Login, Register Form", description: "Form đăng nhập và đăng ký", destinationPage: const Day7App(), icon: Icons.login),
+    ProjectDay(title: "Bài 8: BMI và Feedback Form", description: "Tính toán BMI và biểu mẫu phản hồi", destinationPage: const Day8App(), icon: Icons.calculate),
+    ProjectDay(title: "Bài 9: List Products", description: "Danh sách sản phẩm", destinationPage: const Day9App(), icon: Icons.shopping_bag),
+    ProjectDay(title: "Bài 10: NewsAPI", description: "Tích hợp API tin tức", destinationPage: const Day10App(), icon: Icons.newspaper),
+    ProjectDay(title: "Bài 11: Login and Profile", description: "Đăng nhập và hồ sơ người dùng", destinationPage: const Day11App(), icon: Icons.person),
   ];
 
   Future<void> _launchGithub() async {
-    const url = 'https://github.com/lethuyet6904';
+    const url = 'https://github.com/lethuyet6904/Flutter';
     final uri = Uri.parse(url);
     try {
       if (await canLaunchUrl(uri)) {
@@ -89,34 +89,104 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(20),
-          height: 450,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          padding: const EdgeInsets.all(24),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(width: 40, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+              Container(
+                width: 50,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.green.withOpacity(0.3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: const CircleAvatar(
+                  radius: 65,
+                  backgroundImage: AssetImage('assets/images/avatar.png'),
+                  backgroundColor: Colors.green,
+                ),
+              ),
               const SizedBox(height: 20),
-              const CircleAvatar(radius: 60, backgroundImage: AssetImage('assets/images/avatar.jpg'), backgroundColor: Colors.green),
-              const SizedBox(height: 15),
-              const Text("Lê Thanh Thuyết", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green)),
-              const Text("Mobile Developer", style: TextStyle(color: Colors.grey, fontSize: 16)),
+              const Text(
+                "Lê Thanh Thuyết",
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Text(
+                  "Mobile Developer",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              _buildInfoRow(Icons.code, "Flutter & Dart"),
+              const SizedBox(height: 12),
+              _buildInfoRow(Icons.phone_android, "Mobile Development"),
+              const SizedBox(height: 12),
+              _buildInfoRow(Icons.school, "Student Developer"),
               const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
+                height: 54,
                 child: ElevatedButton.icon(
                   onPressed: _launchGithub,
-                  icon: const Icon(Icons.code),
-                  label: const Text("Truy cập GitHub của tôi"),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 15), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  icon: const Icon(Icons.code, size: 22),
+                  label: const Text(
+                    "Xem GitHub của tôi",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 15),
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text("Đóng", style: TextStyle(color: Colors.grey)))
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Đóng",
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 10),
             ],
           ),
         );
@@ -124,84 +194,207 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
     );
   }
 
+  Widget _buildInfoRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, color: Colors.green, size: 20),
+        ),
+        const SizedBox(width: 15),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 15,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Navbar Xanh lá
       appBar: AppBar(
-        toolbarHeight: 80,
+        // Đã giảm chiều cao xuống 54 (mặc định là 56, bạn để 60 hơi to)
+        toolbarHeight: 54,
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF43A047), Color(0xFF66BB6A)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
+        backgroundColor: Colors.green,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Lê Thanh Thuyết", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text(
+              "Lê Thanh Thuyết",
+              style: TextStyle(
+                fontSize: 16, // Giảm font size một chút cho cân đối
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              "Flutter Portfolio",
+              style: TextStyle(
+                fontSize: 11, // Giảm font size subtitle
+                color: Colors.white70,
+              ),
+            ),
           ],
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0),
+            padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
               onTap: _showProfileDetails,
-              child: Container(
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2)),
-                child: const CircleAvatar(radius: 22, backgroundImage: AssetImage('assets/images/avatar.jpg'), backgroundColor: Colors.white),
+              child: const CircleAvatar(
+                radius: 16, // Giảm radius avatar trên navbar một chút
+                backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                backgroundColor: Colors.white,
               ),
             ),
-          )
+          ),
         ],
       ),
-
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 25, 20, 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Container(width: 5, height: 25, decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10))),
-                const SizedBox(width: 10),
-                const Text("Danh sách bài tập", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+                Container(
+                  width: 4,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  "Danh sách bài tập",
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    "${projects.length} bài",
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
+          const SizedBox(height: 16),
           Expanded(
-            child: ListView.separated( // Dùng Separated để có đường kẻ mờ giữa các bài
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-              itemCount: projects.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              itemCount: projects.length, // Sửa lỗi: Chỉ để itemCount 1 lần ở đây
               itemBuilder: (context, index) {
                 final item = projects[index];
                 return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    // Viền mỏng, không icon, rất clean
-                    border: Border.all(color: Colors.grey.withOpacity(0.2)), 
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
-                      BoxShadow(color: Colors.grey.withOpacity(0.05), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 2)),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
                   ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    // BỎ LEADING ICON Ở ĐÂY
-                    title: Text(
-                      item.title, 
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87)
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => item.destinationPage),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.green.withOpacity(0.8),
+                                    Colors.green,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(item.icon,
+                                  color: Colors.white, size: 26),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    item.description,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.green,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    subtitle: Text(item.description, style: TextStyle(color: Colors.grey[500], fontSize: 13)),
-                    trailing: const Icon(Icons.arrow_forward_ios, color: Colors.green, size: 14), // Mũi tên nhỏ tinh tế
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => item.destinationPage));
-                    },
                   ),
                 );
               },

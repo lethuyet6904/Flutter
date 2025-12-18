@@ -10,7 +10,8 @@ class Day7App extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Bài tập Day 7"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,21 +22,19 @@ class Day7App extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            
-            // Nút bấm vào bài 1: Login
+
             _buildMenuButton(
               context,
               "1. Login Screen",
-              Icons.login, // Đã đổi icon thành nút Login
+              Icons.login,
               Colors.blue,
               const MyLogin(),
             ),
-            
-            // Nút bấm vào bài 2: Register
+
             _buildMenuButton(
               context,
               "2. Register Screen",
-              Icons.person_add, // Đã đổi icon thành hình thêm người
+              Icons.person_add,
               Colors.green,
               const MyRegister(),
             ),
@@ -45,7 +44,6 @@ class Day7App extends StatelessWidget {
     );
   }
 
-  // Hàm tạo nút bấm
   Widget _buildMenuButton(BuildContext context, String title, IconData icon, Color color, Widget page) {
     return Card(
       elevation: 4,
