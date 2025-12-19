@@ -89,23 +89,6 @@ class MyProfile extends StatelessWidget {
               _buildDivider(),
               _buildListTile(Icons.location_city, "City", user.city),
             ]),
-
-            const SizedBox(height: 24),
-            
-            _buildSectionHeader("Security"),
-            Container(
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                  child: const Icon(Icons.vpn_key, color: Colors.orange),
-                ),
-                title: const Text("Access Token", style: TextStyle(fontWeight: FontWeight.w500)),
-                subtitle: Text("${user.token.substring(0, 20)}...", style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-                trailing: const Icon(Icons.copy, size: 18, color: Colors.grey),
-              ),
-            ),
           ],
         ),
       ),
